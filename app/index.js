@@ -11,6 +11,8 @@ const bodyParser = require('body-parser')
 
 const app = express()
 
+require('./authentication').init(app)
+
 app.use(bodyParser.urlencoded({
   extended: false
 }))

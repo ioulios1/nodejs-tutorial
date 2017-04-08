@@ -6,6 +6,8 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const pg = require('pg')
 
+const authenticationMiddleware = require('./middleware')
+
 const conString = 'postgres://ioulios:1995@localhost/ioulios'
 
 var user = {
@@ -56,7 +58,8 @@ passport.deserializeUser(function(id, done) {
 
 
 
-function initPassport () {
+const init=function initPassport () {
+    console.log('init passport')
   passport.use(new LocalStrategy(
     function(username, password, done) {
       username='ioulios'
@@ -80,8 +83,9 @@ function initPassport () {
       })
     }
   ))
+  passport.authenticationMiddleware=authenticationMiddleware
 }
 
 
 
-module.exports.initPassport = initPassport
+module.exports= init
