@@ -26,4 +26,4 @@ function renderProfile(req,res)
   })
 }
 
-module.exports.init=init
+module.exports=init

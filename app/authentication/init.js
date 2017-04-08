@@ -59,7 +59,6 @@ passport.deserializeUser(function(id, done) {
 
 
 const init=function initPassport () {
-    console.log('init passport')
   passport.use(new LocalStrategy(
     function(username, password, done) {
       username='ioulios'
