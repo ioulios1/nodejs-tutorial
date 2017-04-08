@@ -47,18 +47,18 @@ function findUser (username,callback){
 }
 
 passport.serializeUser(function(user, done) {
-  done(null, user.id);
+  done(null, user.username);
 });
 
-passport.deserializeUser(function(id, done) {
-  findUser(id, function(err, user) {
+passport.deserializeUser(function(username, done) {
+  findUser(username, function(err, user) {
     done(err, user);
   });
 });
 
 
 
-const init=function initPassport () {
+function initPassport () {
   passport.use(new LocalStrategy(
     function(username, password, done) {
       username='ioulios'
@@ -87,4 +87,4 @@ const init=function initPassport () {
 
 
 
-module.exports= init
+module.exports= initPassport
