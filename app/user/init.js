@@ -9,7 +9,7 @@ function init(app){
          failureRedirect: '/',
          failureFlash: true })
     );
-    app.get('/profile',renderProfile)
+    app.get('/profile',passport.authenticationMiddleware(),renderProfile)
     app.get('/',renderWelcome)
 }
 
