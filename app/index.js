@@ -1,4 +1,4 @@
-//index.js
+//app/index.js
 
 const express = require('express')
 const passport = require('passport')
@@ -7,12 +7,19 @@ const pg = require('pg')
 const pgSession = require('connect-pg-simple')(session)
 const exphbs = require('express-handlebars')
 const path = require('path')
+const bodyParser = require('body-parser')
 
 const app = express()
 
+app.use(bodyParser.urlencoded({
+  extended: false
+}))
+
 app.use(session({
-  strore : new (require('connect-pg-simple')(session))(),
-  sexret : process.env.FOO_COOKIE_SECRET,
+  strore : new pgSession({
+  conString : 'postgres://ioulios:1995@localhost/ioulios'
+}),
+  secret : 'secretMessage',
   resave : false,
   saveUninitialized : false
 }))
