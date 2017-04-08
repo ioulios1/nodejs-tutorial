@@ -39,5 +39,6 @@ app.set('view engine','.hbs')
 app.set('views',__dirname)
 
 require('./user').init(app)
+require('./note/init.js').init(app)
 
 module.exports = app

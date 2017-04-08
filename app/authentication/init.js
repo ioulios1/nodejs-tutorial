@@ -61,8 +61,6 @@ passport.deserializeUser(function(username, done) {
 function initPassport () {
   passport.use(new LocalStrategy(
     function(username, password, done) {
-      username='ioulios'
-      password='1234'
       console.log(username)
       findUser(username, function (err, user) {
         console.log('user credentials->'+username+"====="+password+'\n')
@@ -70,14 +68,14 @@ function initPassport () {
           return done(err)
         }
         if (!user) {
-        //if(typeof user === 'undefined'){
+          console.log('User not found!')
           return done(null, false)
         }
         if (password !== user.password) {
-          console.log('pass-> '+user.password+' ======= '+password)
+          console.log('Invalid password!')
           return done(null, false)
         }
-        console.log('authentication succeeded')
+        console.log('Authentication succeeded!')
         return done(null, user)
       })
     }
