@@ -5,6 +5,7 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const pg = require('pg')
+var bcrypt = require('bcrypt-nodejs')
 
 const authenticationMiddleware = require('./middleware')
 
@@ -46,6 +47,13 @@ function findUser (username,callback){
   })
 }
 
+function comparePassword(password,hash,ret){
+  bcrypt.compare(password, hash, function(err, res) {
+      console.log('comparison res '+res+" ---- "+err)
+      ret(err, res)
+  })
+}
+
 passport.serializeUser(function(user, done) {
   done(null, user.username);
 });
@@ -63,20 +71,23 @@ function initPassport () {
     function(username, password, done) {
       console.log(username)
       findUser(username, function (err, user) {
-        console.log('user credentials->'+username+"====="+password+'\n')
-        if (err) {
-          return done(err)
-        }
-        if (!user) {
-          console.log('User not found!')
-          return done(null, false)
-        }
-        if (password !== user.password) {
-          console.log('Invalid password!')
-          return done(null, false)
-        }
-        console.log('Authentication succeeded!')
-        return done(null, user)
+        comparePassword(password,user.password,function (err,res){
+          //console.log('user credentials->'+username+"====="+password+'\n')
+          console.log('Invalid password! '+res)
+          if (err) {
+            return done(err)
+          }
+          if (!user) {
+            console.log('User not found!')
+            return done(null, false)
+          }
+          if (!res) {
+            console.log('Invalid password! '+res)
+            return done(null, false)
+          }
+          console.log('Authentication succeeded!')
+          return done(null, user)
+        })
       })
     }
   ))
