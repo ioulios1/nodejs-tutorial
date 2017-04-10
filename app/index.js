@@ -17,6 +17,7 @@ app.use(bodyParser.urlencoded({
   extended: false
 }))
 
+//Session used by passport module
 app.use(session({
   strore : new pgSession({
   conString : 'postgres://ioulios:1995@localhost/ioulios'

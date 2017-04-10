@@ -1,5 +1,4 @@
 // app/authentication/init.js
-
 'use strict'
 
 const passport = require('passport')
@@ -11,13 +10,18 @@ const authenticationMiddleware = require('./middleware')
 
 const conString = 'postgres://ioulios:1995@localhost/ioulios'
 
+//users info struct
 var user = {
   username:'',
   password:'',
   id:''
 }
 
-// γίνετε έλεγχος αν υπάρχει ο χρήστης.
+/**
+*Search user in database
+*@username string :users username
+*@callback function (err,user)
+*/
 function findUser (username,callback){
   pg.connect(conString,function (err, client, done) {
      if (err) {
@@ -28,7 +32,7 @@ function findUser (username,callback){
        if (err) {
          return console.error('error happened during query', err)
        }
-       //console.log(result.rows.length)
+
        done()
        if(result.rows.length==1)
        {
@@ -47,9 +51,14 @@ function findUser (username,callback){
   })
 }
 
+/**
+*Comprare a pasword and a hashed password
+*@password string
+*@hash string : hashed value of a password
+*@callback function (err,result)
+*/
 function comparePassword(password,hash,ret){
   bcrypt.compare(password, hash, function(err, res) {
-      console.log('comparison res '+res+" ---- "+err)
       ret(err, res)
   })
 }
@@ -65,27 +74,22 @@ passport.deserializeUser(function(username, done) {
 });
 
 
-
+//create strategy for login authentication
 function initPassport () {
   passport.use(new LocalStrategy(
     function(username, password, done) {
       console.log(username)
       findUser(username, function (err, user) {
         comparePassword(password,user.password,function (err,res){
-          //console.log('user credentials->'+username+"====="+password+'\n')
-          console.log('Invalid password! '+res)
           if (err) {
             return done(err)
           }
           if (!user) {
-            console.log('User not found!')
             return done(null, false)
           }
           if (!res) {
-            console.log('Invalid password! '+res)
             return done(null, false)
           }
-          console.log('Authentication succeeded!')
           return done(null, user)
         })
       })

@@ -4,7 +4,9 @@ const pg = require('pg')
 
 const conString = 'postgres://ioulios:1995@localhost/ioulios'
 
-
+/**
+*Register user to database with encrypted password
+*/
 function registerUser(req,res)
 {
   pg.connect(conString, function (err, client, done) {

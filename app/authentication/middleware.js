@@ -1,3 +1,4 @@
+//middleware for authentication that passes to the next function
 function authenticationMiddleware () {
   return function (req, res, next) {
     if (req.isAuthenticated()) {
