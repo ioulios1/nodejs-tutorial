@@ -41,4 +41,6 @@ app.set('views',__dirname)
 require('./user').init(app)
 require('./note/init.js').init(app)
 
+require('./singin/init.js').init(app)
+
 module.exports = app
