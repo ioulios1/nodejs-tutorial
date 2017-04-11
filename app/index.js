@@ -8,7 +8,6 @@ const pgSession = require('connect-pg-simple')(session)
 const exphbs = require('express-handlebars')
 const path = require('path')
 const bodyParser = require('body-parser')
-
 const app = express()
 
 require('./authentication').init(app)
@@ -27,6 +26,10 @@ app.use(session({
   saveUninitialized : false
 }))
 
+
+
+
+
 app.use(passport.initialize())
 app.use(passport.session())
 
@@ -42,6 +45,7 @@ app.set('views',__dirname)
 require('./user').init(app)
 require('./note/init.js').init(app)
 
-require('./singin/init.js').init(app)
+//import the singin page and code
+//require('./singin/init.js').init(app)
 
 module.exports = app
