@@ -86,9 +86,10 @@ ALTER TABLE session OWNER TO ioulios;
 --
 
 CREATE TABLE users (
-    id integer NOT NULL,
-    username character varying(40) NOT NULL,
-    password character varying(100) NOT NULL
+    id text NOT NULL,
+    username text NOT NULL,
+    password text NOT NULL,
+    acc_type text NOT NULL
 );
 
 
@@ -113,13 +114,6 @@ ALTER TABLE user_id_seq OWNER TO ioulios;
 --
 
 ALTER SEQUENCE user_id_seq OWNED BY users.id;
-
-
---
--- Name: users id; Type: DEFAULT; Schema: public; Owner: ioulios
---
-
-ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('user_id_seq'::regclass);
 
 
 --
@@ -157,10 +151,9 @@ SELECT pg_catalog.setval('user_id_seq', 9, true);
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: ioulios
 --
 
-COPY users (id, username, password) FROM stdin;
-7	zxc	$2a$10$DQ5uPDc3fM3eY4b2uKPEieBTYkro8kJy6fi13065CjHzALsRYbvzi
-8	test	$2a$10$08iCc9R1dsYr5eZi7NOJ5uha2h6CTUxwTNfzu4Qvjhv.B3Ggw.Rga
-9	110571016559691148951	ioulios tsiko
+COPY users (id, username, password, acc_type) FROM stdin;
+110571016559691148951	Ioulios Tsiko	This account doesnt require password	google
+test	ioulios tsiko	$2a$10$WjcF5a/RGwU2H7VdljTO6.4DVSTyxQjeQXvl6MJlpF4FmqGRasGNq	noProvider
 \.
 
 
