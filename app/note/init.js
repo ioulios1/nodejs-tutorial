@@ -1,7 +1,8 @@
 const passport = require('passport')
 
 function init(app){
-    app.get('/notes',passport.authenticationMiddleware(),renderNote)
+    //app.get('/notes',passport.authenticationMiddleware(),renderNote)
+    app.get('/notes',renderNote)
 }
 
 

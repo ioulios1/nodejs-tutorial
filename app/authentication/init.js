@@ -4,7 +4,11 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const pg = require('pg')
-var bcrypt = require('bcrypt-nodejs')
+const bcrypt = require('bcrypt-nodejs')
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+
+const GOOGLE_CLIENT_ID = '44633740833-dgb60aa7tpbjlea2l2ol22bqsqgenb08.apps.googleusercontent.com'
+const GOOGLE_CLIENT_SECRET = 'FcMBou4P-6eIlHDsv88CGepK'
 
 const authenticationMiddleware = require('./middleware')
 
@@ -12,39 +16,56 @@ const conString = 'postgres://ioulios:1995@localhost/ioulios'
 
 //users info struct
 var user = {
-  username:'',
-  password:'',
-  id:''
+  id : '',
+  name : {
+    givenName:'',
+    familyName:'',
+  }
 }
 
+
 /**
-*Search user in database
-*@username string :users username
+*Search user in database, if it not exist , inserts the new user
+*@profil [object] :users info as returned by google API
 *@callback function (err,user)
 */
-function findUser (username,callback){
+function findUser (profile,callback){
   pg.connect(conString,function (err, client, done) {
      if (err) {
        return console.error('error fetching client from pool', err)
      }
-     client.query('SELECT * from users where username = $1;',[username], function (err, result) {
+     client.query('SELECT * from google_users where id = $1;',[profile.id], function (err, result) {
        done()
        if (err) {
          return console.error('error happened during query', err)
        }
 
-       done()
+
        if(result.rows.length==1)
        {
-         user.username=result.rows[0].username
-         user.password=result.rows[0].password
-         user.id=result.rows[0].id
+         user.name.givenName=profile.name.givenName
+         user.name.familyName=profile.name.familyName
+         user.id=profile.id
 
-         console.log(user)
+         return callback(null,user)
+       }else if(result.rows.length==0)
+       {
+         client.query('INSERT INTO google_users (id,family_name,given_name) VALUES ($1, $2, $3);', [profile.id,profile.name.familyName,profile.name.givenName], function (err, result) {
+           if (err) {
+             // pass the error to the express error handler
+             console.log(err)
+             //return next(err)
+           }
+
+           user.name.givenName=profile.name.givenName
+           user.name.familyName=profile.name.familyName
+           user.id=profile.id
+
+         })
+         done() //this done callback signals the pg driver that the connection can be closed or returned to the connection pool
          return callback(null,user)
        }
        return callback(null)
-       //process.exit(0)
      })
 
 
@@ -64,38 +85,28 @@ function comparePassword(password,hash,ret){
 }
 
 passport.serializeUser(function(user, done) {
-  done(null, user.username);
+  done(null, user);
 });
 
-passport.deserializeUser(function(username, done) {
-  findUser(username, function(err, user) {
+passport.deserializeUser(function(user, done) {
+  findUser(user, function(err, user) {
     done(err, user);
   });
 });
 
 
-//create strategy for login authentication
 function initPassport () {
-  passport.use(new LocalStrategy(
-    function(username, password, done) {
-      console.log(username)
-      findUser(username, function (err, user) {
-        comparePassword(password,user.password,function (err,res){
-          if (err) {
-            return done(err)
-          }
-          if (!user) {
-            return done(null, false)
-          }
-          if (!res) {
-            return done(null, false)
-          }
-          return done(null, user)
-        })
-      })
+  passport.use(new GoogleStrategy({
+      clientID: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
+      callbackURL: "http://localhost:3000/auth/google/callback"
+    },
+    function(accessToken, refreshToken, profile, done) {
+         findUser(profile, function (err, user) {
+           return done(err, user);
+         });
     }
   ))
-  passport.authenticationMiddleware=authenticationMiddleware
 }
 
 
