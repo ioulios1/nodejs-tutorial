@@ -11,7 +11,7 @@ function init(app){
 
 function renderNote(req,res)
 {
-  //noteHandler.getNotes
+  //noteHandler.getNotes/
   //console.log('render note '+req.user.notes)
   res.render('note/note',req.user.notes)
 }
