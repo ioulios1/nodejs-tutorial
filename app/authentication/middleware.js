@@ -1,5 +1,5 @@
 /*
-*Middleware for authentication that passes to the next function
+*Middleware for user authentication,in success passes to the next function
 */
 function authenticationMiddleware () {
   return function (req, res, next) {
