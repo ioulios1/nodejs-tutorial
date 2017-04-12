@@ -11,7 +11,7 @@ function setNote(req,res){
       return next(err)
     }
 
-    client.query("INSERT INTO notetions (id,note) VALUES ($1, $2);", [req.user.id, req.query.note], function (err, result) {
+    client.query("INSERT INTO notetions (username,note) VALUES ($1, $2);", [req.user.username, req.query.note], function (err, result) {
       done() //this done callback signals the pg driver that the connection can be closed or returned to the connection pool
 
       if (err) {
@@ -29,7 +29,7 @@ function setNote(req,res){
 /*
 *Get the notes from database in html table tag format
 *@req [object] : the request object from the get request
-*@return cb(notes) : callback method 
+*@return cb(notes) : callback method
 */
 function getNotes(req,cb){
   var notes
@@ -38,7 +38,7 @@ function getNotes(req,cb){
       return next(err)
     }
 
-    client.query("SELECT note,created_at FROM notetions where id=$1;", [req.user.id], function (err, result) {
+    client.query("SELECT note,created_at FROM notetions where username=$1;", [req.user.username], function (err, result) {
       done() //this done callback signals the pg driver that the connection can be closed or returned to the connection pool
 
       if (err) {

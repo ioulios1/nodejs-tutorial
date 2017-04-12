@@ -16,7 +16,7 @@ function registerUser(req,res)
 
     var hash = bcrypt.hashSync(req.body.password);
 
-    client.query("INSERT INTO users (id,username,password) VALUES ($1, $2, $3);", [req.body.id,req.body.name, hash], function (err, result) {
+    client.query("INSERT INTO usr (username,password,name) VALUES ($1, $2, $3);", [req.body.username,hash,req.body.name], function (err, result) {
       done() //this done callback signals the pg driver that the connection can be closed or returned to the connection pool
 
       if (err) {

@@ -13,9 +13,8 @@ function renderNote(req,res)
 {
   //get the notes from the database
   noteHandler.getNotes(req,function(note){
-    console.log('render note '+req.user.id)
     res.render('note/note',{
-      username : req.user.username,
+      name : req.user.name,
       notes : note
     })
   })

@@ -44,8 +44,8 @@ function renderWelcome(req,res)
 function renderProfile(req,res)
 {
   res.render('user/profile',{
-    username : req.user.username,
-    id : req.user.id
+    name : req.user.name,
+    username : req.user.username
   })
 }
 

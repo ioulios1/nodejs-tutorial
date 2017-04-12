@@ -16,10 +16,9 @@ const conString = 'postgres://ioulios:1995@localhost/ioulios'
 
 //users info struct
 var user = {
-  id : '',
   username : '',
   hash : '',
-  notes : ''
+  name : ''
 }
 
 
@@ -28,12 +27,12 @@ var user = {
 *@id : users identity name
 *@callback function (err,user)
 */
-function findUser (id,callback){
+function findUser (username,callback){
   pg.connect(conString,function (err, client, done) {
      if (err) {
        return console.error('error fetching client from pool', err)
      }
-     client.query('SELECT * from users where id = $1;',[id], function (err, result) {
+     client.query('SELECT * from usr where username= $1;',[username], function (err, result) {
        done()
        if (err) {
          return console.error('error happened during query', err)
@@ -43,8 +42,8 @@ function findUser (id,callback){
        if(result.rows.length==1)
        {
          user.username=result.rows[0].username
-         user.id=id
          user.hash=result.rows[0].password
+         user.name=result.rows[0].name
 
          return callback(null,user)
        }
@@ -61,17 +60,17 @@ function findUser (id,callback){
 function registerGoogleAcc(profile,callback)
 {
   pg.connect(conString,function (err, client, done) {
-    console.log('insede pg.connect')
-    client.query("INSERT INTO users (id,username,password) "
-      +"VALUES ('"+profile.id+"', '"+profile.displayName+"', 'This account doesnt require password');"
+    console.log('inside pg.connect')
+    client.query("INSERT INTO usr (username,password,name) "
+      +"VALUES ('"+profile.id+"', 'This account doesnt require password', '"+profile.displayName+"');"
       ,function (err, result) {
          done()
         if (err) {
           console.log(err)
         }
 
-        user.username = profile.displayName
-        user.id = profile.id
+        user.name = profile.displayName
+        user.username = profile.id
 
         return callback(null,user)
 
@@ -94,11 +93,11 @@ function comparePassword(password,hash,ret){
 
 
 passport.serializeUser(function(user, done) {
-  done(null, user.id);
+  done(null, user.username);
 });
 
-passport.deserializeUser(function(id, done) {
-  findUser(id, function(err, user) {
+passport.deserializeUser(function(username, done) {
+  findUser(username, function(err, user) {
     done(err, user);
   });
 });
@@ -116,7 +115,6 @@ function initPassport () {
          //if the user, the google API returns, is not in the database, make a registration
          if(!user)
          {
-           console.log('create user')
            registerGoogleAcc(profile,function (err,user){
              return done(err, user);
            })
@@ -154,9 +152,5 @@ function initPassport () {
     ))
     passport.authenticationMiddleware=authenticationMiddleware
 }
-
-
-
-
 
 module.exports= initPassport

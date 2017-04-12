@@ -39,8 +39,8 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE notetions (
-    "Num" integer NOT NULL,
-    id text NOT NULL,
+    id integer NOT NULL,
+    username text NOT NULL,
     note text NOT NULL,
     created_at timestamp without time zone DEFAULT now()
 );
@@ -66,7 +66,7 @@ ALTER TABLE "notetions_Num_seq" OWNER TO ioulios;
 -- Name: notetions_Num_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ioulios
 --
 
-ALTER SEQUENCE "notetions_Num_seq" OWNED BY notetions."Num";
+ALTER SEQUENCE "notetions_Num_seq" OWNED BY notetions.id;
 
 
 --
@@ -117,17 +117,68 @@ ALTER SEQUENCE user_id_seq OWNED BY users.id;
 
 
 --
--- Name: notetions Num; Type: DEFAULT; Schema: public; Owner: ioulios
+-- Name: usr; Type: TABLE; Schema: public; Owner: ioulios
 --
 
-ALTER TABLE ONLY notetions ALTER COLUMN "Num" SET DEFAULT nextval('"notetions_Num_seq"'::regclass);
+CREATE TABLE usr (
+    id integer NOT NULL,
+    username text,
+    password text,
+    name text
+);
+
+
+ALTER TABLE usr OWNER TO ioulios;
+
+--
+-- Name: usr_id_seq; Type: SEQUENCE; Schema: public; Owner: ioulios
+--
+
+CREATE SEQUENCE usr_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE usr_id_seq OWNER TO ioulios;
+
+--
+-- Name: usr_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ioulios
+--
+
+ALTER SEQUENCE usr_id_seq OWNED BY usr.id;
+
+
+--
+-- Name: notetions id; Type: DEFAULT; Schema: public; Owner: ioulios
+--
+
+ALTER TABLE ONLY notetions ALTER COLUMN id SET DEFAULT nextval('"notetions_Num_seq"'::regclass);
+
+
+--
+-- Name: usr id; Type: DEFAULT; Schema: public; Owner: ioulios
+--
+
+ALTER TABLE ONLY usr ALTER COLUMN id SET DEFAULT nextval('usr_id_seq'::regclass);
 
 
 --
 -- Data for Name: notetions; Type: TABLE DATA; Schema: public; Owner: ioulios
 --
 
-COPY notetions ("Num", id, note, created_at) FROM stdin;
+COPY notetions (id, username, note, created_at) FROM stdin;
+6	110571016559691148951	test note	2017-04-12 14:20:14.996394
+7	110571016559691148951	a biger note to display in the html table\r\nwith two rows	2017-04-12 14:57:16.519271
+8	test	taking a testing note\r\nwith two rows\r\nand a third\r\nand a really long fooooooooooooooooorthhhhhhhhhhhh	2017-04-12 14:58:45.863445
+9	110571016559691148951		2017-04-12 15:43:46.680374
+10	test1	new note	2017-04-12 17:11:53.54629
+11	test1		2017-04-12 17:11:55.354488
+12	test1		2017-04-12 17:11:57.269333
+13	test1	sdfs	2017-04-12 17:12:00.274378
+14	110571016559691148951	ffd	2017-04-12 17:12:47.679677
 \.
 
 
@@ -135,7 +186,7 @@ COPY notetions ("Num", id, note, created_at) FROM stdin;
 -- Name: notetions_Num_seq; Type: SEQUENCE SET; Schema: public; Owner: ioulios
 --
 
-SELECT pg_catalog.setval('"notetions_Num_seq"', 5, true);
+SELECT pg_catalog.setval('"notetions_Num_seq"', 14, true);
 
 
 --
@@ -166,11 +217,28 @@ test3	ioulios tsiko3	$2a$10$i2.KfMmYk6MSXeO/v6dss.5u85gDilE5o0jasCfqCxEoh2xGPfcN
 
 
 --
+-- Data for Name: usr; Type: TABLE DATA; Schema: public; Owner: ioulios
+--
+
+COPY usr (id, username, password, name) FROM stdin;
+1	110571016559691148951	This account doesnt require password	Ioulios Tsiko
+2	test1	$2a$10$KZ7C4QeZdrl2P2UCFv3xg.Grg7oCXG50/Nt5tObG.m.OmlOH4dlgy	ioulios
+\.
+
+
+--
+-- Name: usr_id_seq; Type: SEQUENCE SET; Schema: public; Owner: ioulios
+--
+
+SELECT pg_catalog.setval('usr_id_seq', 2, true);
+
+
+--
 -- Name: notetions notetions_pkey; Type: CONSTRAINT; Schema: public; Owner: ioulios
 --
 
 ALTER TABLE ONLY notetions
-    ADD CONSTRAINT notetions_pkey PRIMARY KEY ("Num");
+    ADD CONSTRAINT notetions_pkey PRIMARY KEY (id);
 
 
 --
@@ -198,11 +266,19 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: notetions notetions_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: ioulios
+-- Name: usr usr_pkey; Type: CONSTRAINT; Schema: public; Owner: ioulios
 --
 
-ALTER TABLE ONLY notetions
-    ADD CONSTRAINT notetions_id_fkey FOREIGN KEY (id) REFERENCES users(id);
+ALTER TABLE ONLY usr
+    ADD CONSTRAINT usr_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: usr usr_username_key; Type: CONSTRAINT; Schema: public; Owner: ioulios
+--
+
+ALTER TABLE ONLY usr
+    ADD CONSTRAINT usr_username_key UNIQUE (username);
 
 
 --
