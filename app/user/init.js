@@ -5,38 +5,29 @@ const passport = require("passport")
 
 
 function init(app){
-    /*app.get('/auth/google',
-      passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
 
-
-    app.get('/auth/google/callback',
-      passport.authenticate('google', { failureRedirect: '/' }),
-      function(req, res) {
-        res.redirect('/profile');
-      });
-
-    app.get('/profile',renderProfile)
-    app.get('/',renderWelcome)
-    */
     app.post('/login',passport.authenticate('local', {
          successRedirect: '/profile',
          failureRedirect: '/',
          failureFlash: true })
     );
+
     app.get('/profile',passport.authenticationMiddleware(),renderProfile)
 
-
-    app.get('/auth/google',
-      passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
-
-
-    app.get('/auth/google/callback',
-      passport.authenticate('google', { failureRedirect: '/' }),
-      function(req, res) {
-        res.redirect('/profile');
-      });
-
     app.get('/',renderWelcome)
+
+
+    //calls to google+ API
+      app.get('/auth/google',
+        passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
+
+
+      app.get('/auth/google/callback',
+        passport.authenticate('google', { failureRedirect: '/' }),
+        function(req, res) {
+          res.redirect('/profile');
+        });
+
 
 }
 
@@ -51,7 +42,6 @@ function renderProfile(req,res)
     username : req.user.username,
     id : req.user.id
   })
-  res.render('user/profile')
 }
 
 module.exports=init

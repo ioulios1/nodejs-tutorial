@@ -11,19 +11,16 @@ function registerUser(req,res)
 {
   pg.connect(conString, function (err, client, done) {
     if (err) {
-      // pass the error to the express error handler
       return next(err)
     }
 
     var hash = bcrypt.hashSync(req.body.password);
 
-    client.query("INSERT INTO users (id,username,password,acc_type) VALUES ($1, $2, $3,'noProvider');", [req.body.id,req.body.name, hash], function (err, result) {
+    client.query("INSERT INTO users (id,username,password) VALUES ($1, $2, $3);", [req.body.id,req.body.name, hash], function (err, result) {
       done() //this done callback signals the pg driver that the connection can be closed or returned to the connection pool
 
       if (err) {
-        // pass the error to the express error handler
         console.log(err)
-        //return next(err)
       }
 
       res.redirect('http://localhost:3000');

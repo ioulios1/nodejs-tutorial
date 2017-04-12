@@ -24,10 +24,10 @@ var user = {
 
 /**
 *Search user in database, if it not exist , inserts the new user
-*@profil [object] :users info as returned by google API
+*@id : users identity name
 *@callback function (err,user)
 */
-function findUser (id,accountProvider,callback){
+function findUser (id,callback){
   pg.connect(conString,function (err, client, done) {
      if (err) {
        return console.error('error fetching client from pool', err)
@@ -44,7 +44,6 @@ function findUser (id,accountProvider,callback){
          user.username=result.rows[0].username
          user.id=id
          user.hash=result.rows[0].password
-         console.log(user)
 
          return callback(null,user)
        }
@@ -54,17 +53,19 @@ function findUser (id,accountProvider,callback){
    })
 }
 
-
+/*
+*Register users with google account to database, if they login for the first time
+*profile {object} : users info as returned by google API
+*/
 function registerGoogleAcc(profile,callback)
 {
   pg.connect(conString,function (err, client, done) {
     console.log('insede pg.connect')
-    client.query("INSERT INTO users (id,username,password,acc_type) "
-      +"VALUES ('"+profile.id+"', '"+profile.displayName+"', 'This account doesnt require password', '"+profile.provider+"');"
+    client.query("INSERT INTO users (id,username,password) "
+      +"VALUES ('"+profile.id+"', '"+profile.displayName+"', 'This account doesnt require password');"
       ,function (err, result) {
          done()
         if (err) {
-          // pass the error to the express error handler
           console.log(err)
         }
 
@@ -89,25 +90,29 @@ function comparePassword(password,hash,ret){
   })
 }
 
+
+
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
 
 passport.deserializeUser(function(id, done) {
-  findUser(id,null, function(err, user) {
+  findUser(id, function(err, user) {
     done(err, user);
   });
 });
 
 
 function initPassport () {
+  //implement google Strategy
   passport.use(new GoogleStrategy({
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
       callbackURL: "http://localhost:3000/auth/google/callback"
     },
     function(accessToken, refreshToken, profile, done) {
-       findUser(profile.id,profile.provider, function (err, user) {
+       findUser(profile.id, function (err, user) {
+         //if the user, the google API returns, is not in the database, make a registration
          if(!user)
          {
            console.log('create user')
@@ -121,17 +126,22 @@ function initPassport () {
 
   ))
 
+  //implements local strategy
   passport.use(new LocalStrategy(
       function(username, password, done) {
-        console.log(username)
-        findUser(username,null, function (err, user) {
-          console.log(user)
+        //check the users credentials
+        findUser(username, function (err, user) {
+          if (err) {
+            return done(err)
+          }
+          if (!user) {
+            return done(null, false)
+          }
+
+          //if the user exist in the database  check the password
           comparePassword(password,user.hash,function (err,res){
             if (err) {
               return done(err)
-            }
-            if (!user) {
-              return done(null, false)
             }
             if (!res) {
               return done(null, false)
