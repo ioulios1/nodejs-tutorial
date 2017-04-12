@@ -12,6 +12,11 @@ function init(app){
          failureFlash: true })
     );
 
+    app.get('/logout', function(req, res){
+        req.logout();
+        res.redirect('/');
+    });
+
     app.get('/profile',passport.authenticationMiddleware(),renderProfile)
 
     app.get('/',renderWelcome)
