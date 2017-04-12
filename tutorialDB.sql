@@ -35,6 +35,41 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: notetions; Type: TABLE; Schema: public; Owner: ioulios
+--
+
+CREATE TABLE notetions (
+    "Num" integer NOT NULL,
+    id text NOT NULL,
+    note text NOT NULL,
+    created_at timestamp without time zone DEFAULT now()
+);
+
+
+ALTER TABLE notetions OWNER TO ioulios;
+
+--
+-- Name: notetions_Num_seq; Type: SEQUENCE; Schema: public; Owner: ioulios
+--
+
+CREATE SEQUENCE "notetions_Num_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "notetions_Num_seq" OWNER TO ioulios;
+
+--
+-- Name: notetions_Num_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ioulios
+--
+
+ALTER SEQUENCE "notetions_Num_seq" OWNED BY notetions."Num";
+
+
+--
 -- Name: session; Type: TABLE; Schema: public; Owner: ioulios
 --
 
@@ -82,6 +117,28 @@ ALTER SEQUENCE user_id_seq OWNED BY users.id;
 
 
 --
+-- Name: notetions Num; Type: DEFAULT; Schema: public; Owner: ioulios
+--
+
+ALTER TABLE ONLY notetions ALTER COLUMN "Num" SET DEFAULT nextval('"notetions_Num_seq"'::regclass);
+
+
+--
+-- Data for Name: notetions; Type: TABLE DATA; Schema: public; Owner: ioulios
+--
+
+COPY notetions ("Num", id, note, created_at) FROM stdin;
+\.
+
+
+--
+-- Name: notetions_Num_seq; Type: SEQUENCE SET; Schema: public; Owner: ioulios
+--
+
+SELECT pg_catalog.setval('"notetions_Num_seq"', 5, true);
+
+
+--
 -- Data for Name: session; Type: TABLE DATA; Schema: public; Owner: ioulios
 --
 
@@ -109,6 +166,14 @@ test3	ioulios tsiko3	$2a$10$i2.KfMmYk6MSXeO/v6dss.5u85gDilE5o0jasCfqCxEoh2xGPfcN
 
 
 --
+-- Name: notetions notetions_pkey; Type: CONSTRAINT; Schema: public; Owner: ioulios
+--
+
+ALTER TABLE ONLY notetions
+    ADD CONSTRAINT notetions_pkey PRIMARY KEY ("Num");
+
+
+--
 -- Name: session session_pkey; Type: CONSTRAINT; Schema: public; Owner: ioulios
 --
 
@@ -130,6 +195,14 @@ ALTER TABLE ONLY users
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT user_username_key UNIQUE (username);
+
+
+--
+-- Name: notetions notetions_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: ioulios
+--
+
+ALTER TABLE ONLY notetions
+    ADD CONSTRAINT notetions_id_fkey FOREIGN KEY (id) REFERENCES users(id);
 
 
 --
