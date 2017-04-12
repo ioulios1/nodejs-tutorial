@@ -35,40 +35,6 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: google_users; Type: TABLE; Schema: public; Owner: ioulios
---
-
-CREATE TABLE google_users (
-    id text NOT NULL,
-    family_name text NOT NULL,
-    given_name text NOT NULL
-);
-
-
-ALTER TABLE google_users OWNER TO ioulios;
-
---
--- Name: googleUsers_id_seq; Type: SEQUENCE; Schema: public; Owner: ioulios
---
-
-CREATE SEQUENCE "googleUsers_id_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE "googleUsers_id_seq" OWNER TO ioulios;
-
---
--- Name: googleUsers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ioulios
---
-
-ALTER SEQUENCE "googleUsers_id_seq" OWNED BY google_users.id;
-
-
---
 -- Name: session; Type: TABLE; Schema: public; Owner: ioulios
 --
 
@@ -88,8 +54,7 @@ ALTER TABLE session OWNER TO ioulios;
 CREATE TABLE users (
     id text NOT NULL,
     username text NOT NULL,
-    password text NOT NULL,
-    acc_type text NOT NULL
+    password text NOT NULL
 );
 
 
@@ -117,22 +82,6 @@ ALTER SEQUENCE user_id_seq OWNED BY users.id;
 
 
 --
--- Name: googleUsers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: ioulios
---
-
-SELECT pg_catalog.setval('"googleUsers_id_seq"', 1, false);
-
-
---
--- Data for Name: google_users; Type: TABLE DATA; Schema: public; Owner: ioulios
---
-
-COPY google_users (id, family_name, given_name) FROM stdin;
-110571016559691148951	Tsiko	Ioulios
-\.
-
-
---
 -- Data for Name: session; Type: TABLE DATA; Schema: public; Owner: ioulios
 --
 
@@ -151,18 +100,12 @@ SELECT pg_catalog.setval('user_id_seq', 9, true);
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: ioulios
 --
 
-COPY users (id, username, password, acc_type) FROM stdin;
-110571016559691148951	Ioulios Tsiko	This account doesnt require password	google
-test	ioulios tsiko	$2a$10$WjcF5a/RGwU2H7VdljTO6.4DVSTyxQjeQXvl6MJlpF4FmqGRasGNq	noProvider
+COPY users (id, username, password) FROM stdin;
+110571016559691148951	Ioulios Tsiko	This account doesnt require password
+test	ioulios tsiko	$2a$10$WjcF5a/RGwU2H7VdljTO6.4DVSTyxQjeQXvl6MJlpF4FmqGRasGNq
+test2	ioulios tsiko2	$2a$10$ZO0FHJDWgWkHxdTYEy2kaewSyTC.PqGgEVNH2066ECrdH2UoAob6.
+test3	ioulios tsiko3	$2a$10$i2.KfMmYk6MSXeO/v6dss.5u85gDilE5o0jasCfqCxEoh2xGPfcNq
 \.
-
-
---
--- Name: google_users googleUsers_pkey; Type: CONSTRAINT; Schema: public; Owner: ioulios
---
-
-ALTER TABLE ONLY google_users
-    ADD CONSTRAINT "googleUsers_pkey" PRIMARY KEY (id);
 
 
 --
