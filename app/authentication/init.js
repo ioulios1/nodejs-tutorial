@@ -18,7 +18,8 @@ const conString = 'postgres://ioulios:1995@localhost/ioulios'
 var user = {
   id : '',
   username : '',
-  hash : ''
+  hash : '',
+  notes : ''
 }
 
 
