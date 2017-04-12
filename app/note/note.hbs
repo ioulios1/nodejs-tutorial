@@ -1,10 +1,12 @@
 <h2>You visited the note page</h2>
 
-<h3>Χρηστης {{username}}</3>
+<h3>Χρηστης {{username}}</h3>
 
-<h3>{{notetions}}</h3>
-
+{{{notes}}}
+</br>
 <form method='get' action='/setNote'>
-  <input name='note' id='note' type='textfield' placeholder="New note ...">
-  <input type='submit' value='save'>
+  <textarea name='note' id='note' type='textfield' placeholder="New note ..." rows="4" cols="50"></textarea>
+  <input type='submit' value='save'></input>
 </form>
+
+<a href='http://localhost:3000/profile'>profile</a>

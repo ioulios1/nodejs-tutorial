@@ -11,9 +11,14 @@ function init(app){
 
 function renderNote(req,res)
 {
-  //noteHandler.getNotes/
-  //console.log('render note '+req.user.notes)
-  res.render('note/note',req.user.notes)
+  //get the notes from the database
+  noteHandler.getNotes(req,function(note){
+    console.log('render note '+req.user.id)
+    res.render('note/note',{
+      username : req.user.username,
+      notes : note
+    })
+  })
 }
 
 module.exports.init=init
