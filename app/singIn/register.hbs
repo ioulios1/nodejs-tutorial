@@ -1,28 +1,7 @@
-< form action = "/singin"
-method = "post" >
-    <
-    input name = "username"
-id = "username"
-type = "text"
-placeholder = "Your username"
-required / > < /br> <
-    input name = "password"
-id = "password"
-type = "password"
-placeholder = "Your password"
-required / > < /br> <
-    input name = "name"
-id = "name"
-type = "text"
-placeholder = "Your name"
-required / > < /br> <
-    input type = "submit"
-value = 'SingIn' / >
-    <
-    /form> {
-        {
-            {
-                errMsg
-            }
-        }
-    }
+<form action = "/singin" method = "post" >
+    <input name = "username" id = "username" type = "text" placeholder = "Your username" required /> </br>
+    <input name = "password" id = "password" type = "password" placeholder = "Your password" required /> </br>
+    <input name = "name" id = "name" type = "text" placeholder = "Your name" required /> </br>
+    <input type = "submit" value = 'SingIn' />
+</form>
+    {{{errMsg}}}

@@ -1,42 +1,13 @@
 You visited the note page
-    <
-    a href = 'http://localhost:3000/profile' > Profile < /a> <
-    a href = 'http://localhost:3000/logout' > Logout < /a>
+  <a href = 'http://localhost:3000/profile'> Profile </a>
+  <a href = 'http://localhost:3000/logout' > Logout </a>
 
+<h3> Χρηστης {{name}} </h3>
 
-    <
-    h3 > Χρηστης {
-        {
-            name
-        }
-    } < /h3>
-
-{
-    {
-        {
-            notes
-        }
-    }
-} <
-/br> <
-form method = 'get'
-action = '/setNote' >
-    <
-    textarea name = 'note'
-id = 'note'
-type = 'textfield'
-placeholder = "New note ..."
-rows = "4"
-cols = "50"
-required > < /textarea> <
-    input type = 'submit'
-value = 'save' > < /input> <
-    /form>
-
-{
-    {
-        {
-            errMsg
-        }
-    }
-}
+{{{notes}}}
+</br>
+<form method = 'get' action = '/setNote' >
+    <textarea name = 'note' id = 'note' type = 'textfield' placeholder = "New note ..." rows = "4" cols = "50" required > </textarea>
+    <input type = 'submit' value = 'save' > </input>
+</form>
+{{{errMsg}}}

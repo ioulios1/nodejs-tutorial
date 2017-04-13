@@ -1,31 +1,11 @@
-<
-form action = "/login"
-method = "post" >
-    <
-    input name = "username"
-id = "username"
-type = "text"
-placeholder = "Your username"
-required / > < /br> <
-    input name = "password"
-id = "password"
-type = "password"
-placeholder = "Your password"
-required / > < /br> <
-    input type = "submit"
-value = 'Login' / >
-    <
-    /form> {
-        {
-            {
-                errMsg
-            }
-        }
-    }
+<form action = "/login" method = "post">
+    <input name = "username" id = "username" type = "text" placeholder = "Your username" required /> </br>
+    <input name = "password" id = "password" type = "password" placeholder = "Your password" required /> </br>
+    <input type = "submit" value = 'Login' />
+</form>
+    {{{errMsg}}}
 
 
-    <
-    a href = "/auth/google" > Login with Google < /a></br > < /br>
 
-    <
-    a href = "http://localhost:3000/register" > Sing In to nodejs Authentication < /a>
+<a href = "/auth/google" > Login with Google </a></br> </br>
+<a href = "http://localhost:3000/register" > Sing In to nodejs Authentication </a>
