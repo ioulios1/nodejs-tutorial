@@ -10,12 +10,16 @@ function setNote(req,res){
     if (err) {
       return next(err)
     }
-
+    if(req.query.note.trim()==='')
+    {
+      res.redirect('http://localhost:3000/notes/?err=emptyNote');
+    }else
     client.query("INSERT INTO notetions (username,note) VALUES ($1, $2);", [req.user.username, req.query.note], function (err, result) {
       done() //this done callback signals the pg driver that the connection can be closed or returned to the connection pool
 
       if (err) {
         console.log(err)
+        res.redirect('http://localhost:3000/notes/?err=true');
       }
 
       res.redirect('http://localhost:3000/notes');
@@ -37,7 +41,6 @@ function getNotes(req,cb){
     if (err) {
       return next(err)
     }
-
     client.query("SELECT note,created_at FROM notetions where username=$1;", [req.user.username], function (err, result) {
       done() //this done callback signals the pg driver that the connection can be closed or returned to the connection pool
 
@@ -45,11 +48,9 @@ function getNotes(req,cb){
         console.log(err)
       }
 
-      console.log(result.rows.length)
       if(result.rows.length==0)
       {
         notes='You dont have any notes'
-        console.log(req.user.notes)
       }else
       {
         notes='<table> <tr> <th> note </th> <th> date </th> </tr>'

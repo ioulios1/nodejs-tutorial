@@ -1,9 +1,10 @@
 
 <form action="/login" method="post">
-  <input name="username" id="username" type="text" placeholder="Your username" /></br>
-  <input name="password" id="password" type="password" placeholder="Your password"/></br>
+  <input name="username" id="username" type="text" placeholder="Your username" required/></br>
+  <input name="password" id="password" type="password" placeholder="Your password" required/></br>
   <input type="submit" value='Login'/>
 </form>
+{{{errMsg}}}
 
 
 <a href="/auth/google">Login with Google</a></br></br>

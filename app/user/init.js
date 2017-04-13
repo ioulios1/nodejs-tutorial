@@ -8,8 +8,8 @@ function init(app){
 
     app.post('/login',passport.authenticate('local', {
          successRedirect: '/profile',
-         failureRedirect: '/',
-         failureFlash: true })
+         failureRedirect: '/?err=wrongCredentials'
+        })
     );
 
     app.get('/logout', function(req, res){
@@ -38,7 +38,10 @@ function init(app){
 
 function renderWelcome(req,res)
 {
-  res.render('user/welcome')
+  var errorMsg=''
+  if(req.query.err==='wrongCredentials')
+    errorMsg='<font color="red">Wrong username or password!!!</font></br>'
+  res.render('user/welcome',{errMsg : errorMsg})
 }
 
 function renderProfile(req,res)
