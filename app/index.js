@@ -13,17 +13,17 @@ const app = express()
 require('./authentication').init(app)
 
 app.use(bodyParser.urlencoded({
-  extended: false
+    extended: false
 }))
 
 //Session used by passport module
 app.use(session({
-  strore : new pgSession({
-  conString : 'postgres://ioulios:1995@localhost/ioulios'
-}),
-  secret : 'secretMessage',
-  resave : false,
-  saveUninitialized : false
+    strore: new pgSession({
+        conString: 'postgres://ioulios:1995@localhost/ioulios'
+    }),
+    secret: 'secretMessage',
+    resave: false,
+    saveUninitialized: false
 }))
 
 
@@ -33,14 +33,14 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.engine('.hbs',exphbs({
-  defaultLayout : 'layout',
-  extname: '.hbs',
-  layoutsDir: path.join(__dirname)
+app.engine('.hbs', exphbs({
+    defaultLayout: 'layout',
+    extname: '.hbs',
+    layoutsDir: path.join(__dirname)
 }))
 
-app.set('view engine','.hbs')
-app.set('views',__dirname)
+app.set('view engine', '.hbs')
+app.set('views', __dirname)
 
 require('./user').init(app)
 require('./note/init.js').init(app)

@@ -1,13 +1,13 @@
 /*
-*Middleware for user authentication,in success passes to the next function
-*/
-function authenticationMiddleware () {
-  return function (req, res, next) {
-    if (req.isAuthenticated()) {
-      return next()
+ *Middleware for user authentication,in success passes to the next function
+ */
+function authenticationMiddleware() {
+    return function(req, res, next) {
+        if (req.isAuthenticated()) {
+            return next()
+        }
+        res.redirect('/')
     }
-    res.redirect('/')
-  }
 }
 
 module.exports = authenticationMiddleware

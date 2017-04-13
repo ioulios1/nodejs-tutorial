@@ -1,4 +1,4 @@
-module.exports={
+module.exports = {
     init: require('./init.js'),
     middleware: require('./middleware')
 }
