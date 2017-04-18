@@ -18,7 +18,8 @@ const conString = 'postgres://ioulios:1995@localhost/ioulios'
 var user = {
     username: '',
     hash: '',
-    name: ''
+    name: '',
+    id: ''
 }
 
 
@@ -43,6 +44,7 @@ function findUser(username, callback) {
                 user.username = result.rows[0].username
                 user.hash = result.rows[0].password
                 user.name = result.rows[0].name
+                user.id = result.rows[0].user_id
 
                 return callback(null, user)
             }
@@ -58,17 +60,17 @@ function findUser(username, callback) {
  */
 function registerGoogleAcc(profile, callback) {
     pg.connect(conString, function(err, client, done) {
-        console.log('inside pg.connect')
+        //console.log('inside pg.connect')
         client.query("INSERT INTO usr (username,password,name) " +
-            "VALUES ('" + profile.id + "', 'This account doesnt require password', '" + profile.displayName + "');",
+            "VALUES ('" + profile.id + "', 'This account doesnt require password', '" + profile.displayName + "') RETURNING user_id;",
             function(err, result) {
                 done()
                 if (err) {
                     console.log(err)
                 }
-
                 user.name = profile.displayName
                 user.username = profile.id
+                user.id = result.rows[0].user_id
 
                 return callback(null, user)
 
@@ -112,11 +114,11 @@ function initPassport() {
             findUser(profile.id, function(err, user) {
                 //if the user, the google API returns, is not in the database, make a registration
                 if (!user) {
-                    registerGoogleAcc(profile, function(err, user) {
-                        return done(err, user);
+                    registerGoogleAcc(profile, function(err, newUser) {
+                        return done(err, newUser);
                     })
-                }
-                return done(err, user);
+                }else
+                  return done(err, user);
             })
         }
 
